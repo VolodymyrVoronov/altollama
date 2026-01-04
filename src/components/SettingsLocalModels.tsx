@@ -1,4 +1,4 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { CircleXIcon, FolderIcon } from "lucide-react";
 
 import { useOllamaLocalModels } from "@/hooks/useOllamaLocalModels";
@@ -16,7 +16,7 @@ import { Spinner } from "./ui/spinner";
 
 const SettingsLocalModels = () => {
   const setLocalModel = useSetAtom(selectedOllamaLocalModel);
-  const selectedLocalModel = useAtom(selectedOllamaLocalModel);
+  const selectedLocalModel = useAtomValue(selectedOllamaLocalModel);
 
   const { models, isPending, isError, error } = useOllamaLocalModels();
 
@@ -65,7 +65,7 @@ const SettingsLocalModels = () => {
     <div>
       <Models
         models={models?.models}
-        model={selectedLocalModel[0]}
+        model={selectedLocalModel}
         disabled={isPending}
         onModelChange={setLocalModel}
       />
