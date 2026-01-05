@@ -1,14 +1,19 @@
-import { useImageStorage } from "@/hooks/useImageStorage";
+import { toast } from "sonner";
+
 import { useGenerateAltTextImage } from "@/hooks/useGenerateAltTextImage";
 import { useGenerateAltTextImages } from "@/hooks/useGenerateAltTextImages";
+import { useImageStorage } from "@/hooks/useImageStorage";
 
 import ImageView from "./ImageView";
 import { Button } from "./ui/button";
+import { ButtonGroup } from "./ui/button-group";
+import { Spinner } from "./ui/spinner";
 
 const ImagesView = () => {
   const { images, deleteImage } = useImageStorage();
   const {
     generateAltText,
+    cancelAltTextGeneration,
     isGeneratingAltTextImage,
     generatingAltTextImageId,
     errorAltTextImage,
@@ -16,6 +21,7 @@ const ImagesView = () => {
 
   const {
     generateAltTexts,
+    cancelAltTextsGeneration,
     isGeneratingAltTextsImage,
     generatingAltTextsImageId,
     errorAltTextsImage,
@@ -39,17 +45,47 @@ const ImagesView = () => {
     }
   };
 
+  const onCancelAltTextGeneration = () => cancelAltTextGeneration();
+
+  const onCancelAltTextsGeneration = () => cancelAltTextsGeneration();
+
   const onDelete = (id: number) => deleteImage(id);
+
+  if (errorAltTextImage || errorAltTextsImage) {
+    toast.error("Error while processing images. Please try again later.", {
+      richColors: true,
+    });
+  }
 
   return (
     <>
-      <Button
-        size="sm"
-        onClick={onGenerateAltTexts}
-        disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
-      >
-        Process all images
-      </Button>
+      <ButtonGroup>
+        <Button
+          size="sm"
+          onClick={onGenerateAltTexts}
+          disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
+        >
+          {isGeneratingAltTextImage || isGeneratingAltTextsImage ? (
+            <>
+              Processing...
+              <Spinner />
+            </>
+          ) : (
+            <>Process all images</>
+          )}
+        </Button>
+
+        {isGeneratingAltTextsImage ? (
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={onCancelAltTextsGeneration}
+            disabled={!isGeneratingAltTextImage && !isGeneratingAltTextsImage}
+          >
+            Stop processing {}
+          </Button>
+        ) : null}
+      </ButtonGroup>
 
       <div className="grid h-full grid-cols-1 content-start items-stretch gap-2 overflow-x-auto sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {images.map((img) => (
@@ -58,10 +94,14 @@ const ImagesView = () => {
             image={img}
             onGenerateAltText={onGenerateAltText}
             onDelete={onDelete}
+            onCancelGeneration={onCancelAltTextGeneration}
             disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
             generating={
               generatingAltTextImageId === img.id ||
               generatingAltTextsImageId === img.id
+            }
+            showAbortButton={
+              generatingAltTextImageId === img.id && isGeneratingAltTextImage
             }
           />
         ))}

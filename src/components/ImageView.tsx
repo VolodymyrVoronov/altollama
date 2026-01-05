@@ -1,4 +1,4 @@
-import { SparklesIcon, Trash2Icon } from "lucide-react";
+import { BanIcon, SparklesIcon, Trash2Icon } from "lucide-react";
 
 import type { ImageDisplay } from "@/types";
 
@@ -12,26 +12,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Spinner } from "./ui/spinner";
-import { cn } from "@/lib/utils";
 
 export interface ImageViewProps {
   image: ImageDisplay;
   disabled?: boolean;
   generating?: boolean;
+  showAbortButton?: boolean;
 
   onGenerateAltText: (imageId: number) => void;
   onDelete: (imageId: number) => void;
+  onCancelGeneration?: () => void;
 }
 
 const ImageView = ({
   image,
   disabled,
   generating,
+  showAbortButton,
 
   onGenerateAltText,
   onDelete,
+  onCancelGeneration,
 }: ImageViewProps) => {
   const onGenerateAltTextButtonClick = () => {
     if (image.id) {
@@ -50,8 +54,8 @@ const ImageView = ({
       <CardContent className="px-0">
         <ImageZoom isDisabled={generating}>
           <img
-            src={image.previewUrl}
-            alt={image.name}
+            src={image.previewUrl || ""}
+            alt={image.name || ""}
             className={cn(
               "aspect-video h-56 rounded-t-xl object-cover sm:h-50",
               {
@@ -63,13 +67,13 @@ const ImageView = ({
       </CardContent>
 
       <CardHeader className="px-3">
-        <CardTitle className="truncate">{image.name}</CardTitle>
+        <CardTitle className="truncate leading-normal">{image.name}</CardTitle>
         <CardDescription>
           {image.image_alt_text ? image.image_alt_text : "No alt text yet."}
         </CardDescription>
       </CardHeader>
 
-      <CardFooter className="justify-end-safe px-3">
+      <CardFooter className="justify-end-safe gap-2 px-3">
         <ButtonGroup>
           <Button
             size="icon-sm"
@@ -88,6 +92,16 @@ const ImageView = ({
             <Trash2Icon />
           </Button>
         </ButtonGroup>
+
+        {showAbortButton && (
+          <Button
+            size="icon-sm"
+            variant="destructive"
+            onClick={onCancelGeneration}
+          >
+            <BanIcon />
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

@@ -7,6 +7,7 @@ import { ThemeProvider } from "./providers/theme-provider.tsx";
 import App from "./components/App.tsx";
 import Header from "./components/Header.tsx";
 import Settings from "./components/Settings.tsx";
+import { Toaster } from "./components/ui/sonner.tsx";
 
 import "./index.css";
 
@@ -24,5 +25,6 @@ createRoot(document.getElementById("root")!).render(
         </div>
       </ThemeProvider>
     </Provider>
+    <Toaster />
   </StrictMode>,
 );

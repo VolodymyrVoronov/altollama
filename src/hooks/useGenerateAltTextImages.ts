@@ -3,25 +3,38 @@ import { atomWithMutation } from "jotai-tanstack-query";
 
 import { db } from "@/services/db/index-db";
 import { useImageStorage } from "./useImageStorage";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-async function mockVisionAIRequest(imageId: number): Promise<string> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(
-        `A beautiful high-resolution image showcasing modern architecture. (${imageId})`,
-      );
-    }, 3000);
+async function mockVisionAIRequest(
+  imageId: number,
+  signal?: AbortSignal,
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(
+      () =>
+        resolve(`AI Description. Test test test. Test test test. ${imageId}`),
+      5000,
+    );
+
+    signal?.addEventListener("abort", () => {
+      clearTimeout(timer);
+      reject(new Error("Operation cancelled"));
+    });
   });
 }
-
 const generateAltTextsAtom = atomWithMutation(() => ({
-  mutationFn: async ({ imageId }: { imageId: number }) => {
+  mutationFn: async ({
+    imageId,
+    signal,
+  }: {
+    imageId: number;
+    signal?: AbortSignal;
+  }) => {
     const image = await db.images.get(imageId);
 
     if (!image || !image.file) throw new Error("Image not found");
 
-    const altText = await mockVisionAIRequest(imageId);
+    const altText = await mockVisionAIRequest(imageId, signal);
 
     await db.images.update(imageId, { image_alt_text: altText });
 
@@ -30,20 +43,31 @@ const generateAltTextsAtom = atomWithMutation(() => ({
 }));
 
 export const useGenerateAltTextImages = () => {
-  const [{ mutateAsync, status, data, error, isPending, variables }] =
+  const [{ mutateAsync, status, data, error, isPending, variables, reset }] =
     useAtom(generateAltTextsAtom);
   const { refreshImages } = useImageStorage();
+
+  const controllerRef = useRef<AbortController | null>(null);
 
   const [isBatchActive, setIsBatchActive] = useState(false);
 
   const generateAltTexts = async (imageIds: number[]) => {
     setIsBatchActive(true);
 
+    controllerRef.current = new AbortController();
+
     for (const imageId of imageIds) {
       try {
         // mutateAsync returns a promise, allowing us to wait
         // for one to finish before starting the next.
-        await mutateAsync({ imageId });
+        await mutateAsync(
+          { imageId, signal: controllerRef.current?.signal },
+          {
+            onError: () => {
+              reset();
+            },
+          },
+        );
 
         // Refresh UI immediately after each individual image is done
         await refreshImages();
@@ -58,6 +82,7 @@ export const useGenerateAltTextImages = () => {
   };
 
   const cancelAltTextsGeneration = () => {
+    controllerRef.current?.abort();
     setIsBatchActive(false);
   };
 
