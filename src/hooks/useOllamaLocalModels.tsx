@@ -1,5 +1,5 @@
-import { atomWithQuery } from "jotai-tanstack-query";
 import { useAtom } from "jotai";
+import { atomWithQuery } from "jotai-tanstack-query";
 
 import { fetchOllamaLocalModels } from "@/services/api/ollama-local";
 

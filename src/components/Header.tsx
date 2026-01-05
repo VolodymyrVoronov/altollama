@@ -1,7 +1,11 @@
-import React from "react";
+import ModeToggle from "./ModeToggle";
 
 const Header = () => {
-  return <header>Header</header>;
+  return (
+    <header className="flex flex-row justify-end-safe">
+      <ModeToggle />
+    </header>
+  );
 };
 
 export default Header;

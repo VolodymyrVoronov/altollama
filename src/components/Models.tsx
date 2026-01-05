@@ -1,3 +1,5 @@
+import { InfoIcon } from "lucide-react";
+
 import type { IOllamaModel } from "@/types";
 
 import {
@@ -10,7 +12,11 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface IModelsProps {
   models?: IOllamaModel[];
@@ -25,15 +31,31 @@ const Models = ({ models, model, disabled, onModelChange }: IModelsProps) => {
     <FieldGroup>
       <FieldSet className="flex flex-col gap-2">
         <div className="flex flex-col">
-          <FieldLabel>Ollama models available locally</FieldLabel>
-          <FieldDescription>Select a model to get started.</FieldDescription>
+          <FieldLabel>Ollama models available locally </FieldLabel>
+          <FieldDescription className="inline-flex items-center gap-1 text-blue-500">
+            <span> Select a model to get started.</span>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <InfoIcon className="inline size-3" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <span className="flex w-50 text-balance">
+                  NOTE: Please use only models, which support the image
+                  processing, otherwise the prompt will not work and the alt
+                  text will not be generated.
+                </span>
+              </TooltipContent>
+            </Tooltip>
+          </FieldDescription>
         </div>
 
-        <ScrollArea className="h-100 w-full">
+        <div className="h-[calc(100svh-400px)] w-full overflow-hidden">
           <RadioGroup
             value={model || ""}
             onValueChange={onModelChange}
             disabled={disabled}
+            className="grid h-full grid-cols-1 items-start gap-2 overflow-y-auto xl:grid-cols-2"
           >
             {models?.map((model) => (
               <FieldLabel key={model.name} htmlFor={model.name}>
@@ -52,7 +74,7 @@ const Models = ({ models, model, disabled, onModelChange }: IModelsProps) => {
               </FieldLabel>
             ))}
           </RadioGroup>
-        </ScrollArea>
+        </div>
       </FieldSet>
     </FieldGroup>
   );

@@ -12,11 +12,12 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import Models from "./Models";
+import SettingsLocalPrompt from "./SettingsLocalPrompt";
 import { Spinner } from "./ui/spinner";
 
 const SettingsLocalModels = () => {
-  const setLocalModel = useSetAtom(selectedOllamaLocalModel);
   const selectedLocalModel = useAtomValue(selectedOllamaLocalModel);
+  const setLocalModel = useSetAtom(selectedOllamaLocalModel);
 
   const { models, isPending, isError, error } = useOllamaLocalModels();
 
@@ -62,7 +63,9 @@ const SettingsLocalModels = () => {
     );
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
+      <SettingsLocalPrompt />
+
       <Models
         models={models?.models}
         model={selectedLocalModel}
