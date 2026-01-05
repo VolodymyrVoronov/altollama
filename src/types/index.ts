@@ -19,3 +19,16 @@ export interface IOllamaModel {
 export interface IOllamaTagsResponse {
   models: IOllamaModel[];
 }
+
+export interface ImageItem {
+  id?: number;
+  name: string;
+  file: File;
+  type: string;
+  createdAt: number;
+  image_alt_text?: string;
+}
+
+export interface ImageDisplay extends ImageItem {
+  previewUrl: string;
+}

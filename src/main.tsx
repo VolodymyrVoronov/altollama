@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 
 import { ThemeProvider } from "./providers/theme-provider.tsx";
 
-import App from "./App.tsx";
+import App from "./components/App.tsx";
 import Header from "./components/Header.tsx";
 import Settings from "./components/Settings.tsx";
 

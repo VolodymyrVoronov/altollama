@@ -1,5 +1,7 @@
 import { atom } from "jotai";
 
+import type { ImageDisplay } from "@/types";
+
 export const selectedOllamaLocalModel = atom<string | undefined>(undefined);
 
 export const userPrompt =
@@ -14,3 +16,5 @@ export const userPrompt =
 
   Provide only the list of variants.
 `);
+
+export const imagesAtom = atom<ImageDisplay[]>([]);
