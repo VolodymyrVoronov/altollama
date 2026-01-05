@@ -1,4 +1,5 @@
-import { BanIcon, SparklesIcon, Trash2Icon } from "lucide-react";
+import { format } from "date-fns";
+import { BanIcon, InfoIcon, SparklesIcon, Trash2Icon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { ImageDisplay } from "@/types";
@@ -32,6 +33,8 @@ export interface ImageViewProps {
   onCancelGeneration?: () => void;
 }
 
+const TIME_FORMAT = "dd/MM/yyyy HH:mm";
+
 const ImageView = ({
   image,
   disabled,
@@ -55,8 +58,22 @@ const ImageView = ({
   };
 
   return (
-    <Card className="w-full gap-2 pt-0 pb-3">
+    <Card className="relative w-full gap-2 pt-0 pb-3">
       <CardContent className="px-0">
+        <Tooltip>
+          <TooltipTrigger
+            asChild
+            className="absolute top-2 right-2 z-10 cursor-help"
+          >
+            <Button variant="outline" size="icon-xs">
+              <InfoIcon className="size-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Created at {format(image.createdAt, TIME_FORMAT)}</p>
+          </TooltipContent>
+        </Tooltip>
+
         <ImageZoom isDisabled={generating}>
           <img
             src={image.previewUrl || ""}
