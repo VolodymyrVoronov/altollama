@@ -55,7 +55,7 @@ const Models = ({ models, model, disabled, onModelChange }: IModelsProps) => {
             value={model || ""}
             onValueChange={onModelChange}
             disabled={disabled}
-            className="grid h-full grid-cols-1 items-start gap-2 overflow-y-auto xl:grid-cols-2"
+            className="grid h-full grid-cols-1 content-start items-start gap-2 overflow-y-auto xl:grid-cols-2"
           >
             {models?.map((model) => (
               <FieldLabel key={model.name} htmlFor={model.name}>
