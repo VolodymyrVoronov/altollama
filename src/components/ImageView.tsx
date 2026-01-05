@@ -12,6 +12,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Spinner } from "./ui/spinner";
@@ -75,32 +80,53 @@ const ImageView = ({
 
       <CardFooter className="justify-end-safe gap-2 px-3">
         <ButtonGroup>
-          <Button
-            size="icon-sm"
-            disabled={disabled}
-            onClick={onGenerateAltTextButtonClick}
-          >
-            {generating ? <Spinner /> : <SparklesIcon />}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon-sm"
+                disabled={disabled}
+                onClick={onGenerateAltTextButtonClick}
+              >
+                {generating ? <Spinner /> : <SparklesIcon />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Generate alt text</p>
+            </TooltipContent>
+          </Tooltip>
 
-          <Button
-            size="icon-sm"
-            variant="destructive"
-            disabled={disabled}
-            onClick={onDeleteButtonClick}
-          >
-            <Trash2Icon />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon-sm"
+                variant="destructive"
+                disabled={disabled}
+                onClick={onDeleteButtonClick}
+              >
+                <Trash2Icon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Delete image. This action is permanent.</p>
+            </TooltipContent>
+          </Tooltip>
         </ButtonGroup>
 
         {showAbortButton && (
-          <Button
-            size="icon-sm"
-            variant="destructive"
-            onClick={onCancelGeneration}
-          >
-            <BanIcon />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon-sm"
+                variant="destructive"
+                onClick={onCancelGeneration}
+              >
+                <BanIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Stop generation</p>
+            </TooltipContent>
+          </Tooltip>
         )}
       </CardFooter>
     </Card>
