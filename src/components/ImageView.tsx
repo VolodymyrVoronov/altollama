@@ -1,5 +1,6 @@
 import { BanIcon, SparklesIcon, Trash2Icon } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import type { ImageDisplay } from "@/types";
 
 import { ImageZoom } from "@/components/kibo-ui/image-zoom";
@@ -17,7 +18,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Spinner } from "./ui/spinner";
 
