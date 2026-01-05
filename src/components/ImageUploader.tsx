@@ -18,6 +18,7 @@ const ImageUploader = () => {
   return (
     <div>
       <Dropzone
+        className="max-h-37.5"
         accept={{ "image/*": [] }}
         maxFiles={10}
         onDrop={onUploadImagesChange}

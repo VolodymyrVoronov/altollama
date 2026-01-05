@@ -1,4 +1,4 @@
-import Images from "./ImagesView";
+import ImagesView from "./ImagesView";
 import ImageUploader from "./ImageUploader";
 
 const App = () => {
@@ -6,8 +6,8 @@ const App = () => {
     <main className="flex h-[calc(100svh-48px)] flex-col gap-2">
       <ImageUploader />
 
-      <div className="h-full overflow-hidden">
-        <Images />
+      <div className="flex h-full flex-col items-start gap-2 overflow-hidden">
+        <ImagesView />
       </div>
     </main>
   );

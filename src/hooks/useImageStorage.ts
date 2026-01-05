@@ -73,5 +73,5 @@ export const useImageStorage = () => {
     [refreshImages],
   );
 
-  return { images, uploadImages, updateImage, deleteImage };
+  return { images, uploadImages, updateImage, deleteImage, refreshImages };
 };
