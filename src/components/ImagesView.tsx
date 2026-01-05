@@ -1,3 +1,4 @@
+import { VirtuosoGrid } from "react-virtuoso";
 import { toast } from "sonner";
 
 import { useGenerateAltTextImage } from "@/hooks/useGenerateAltTextImage";
@@ -108,24 +109,38 @@ const ImagesView = () => {
         ) : null}
       </ButtonGroup>
 
-      <div className="grid h-full grid-cols-1 content-start items-stretch gap-2 overflow-x-auto sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {images.map((img) => (
-          <ImageView
-            key={img.id}
-            image={img}
-            onGenerateAltText={onGenerateAltText}
-            onDelete={onDelete}
-            onCancelGeneration={onCancelAltTextGeneration}
-            disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
-            generating={
-              generatingAltTextImageId === img.id ||
-              generatingAltTextsImageId === img.id
+      <div className="h-full w-full">
+        <VirtuosoGrid
+          style={{ height: "100%" }}
+          listClassName="grid grid-cols-1 content-start items-stretch gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          totalCount={images?.length}
+          itemContent={(index) => {
+            const image = images?.[index];
+
+            if (!image) {
+              return null;
             }
-            showAbortButton={
-              generatingAltTextImageId === img.id && isGeneratingAltTextImage
-            }
-          />
-        ))}
+
+            return (
+              <ImageView
+                key={image.id}
+                image={image}
+                onGenerateAltText={onGenerateAltText}
+                onDelete={onDelete}
+                onCancelGeneration={onCancelAltTextGeneration}
+                disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
+                generating={
+                  generatingAltTextImageId === image.id ||
+                  generatingAltTextsImageId === image.id
+                }
+                showAbortButton={
+                  generatingAltTextImageId === image.id &&
+                  isGeneratingAltTextImage
+                }
+              />
+            );
+          }}
+        />
       </div>
     </>
   );
