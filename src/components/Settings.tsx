@@ -1,4 +1,5 @@
 import { useAtomValue, useSetAtom } from "jotai";
+import { CloudIcon, ComputerIcon } from "lucide-react";
 
 import { selectedOllamaTypeAtom } from "@/stores/app";
 
@@ -21,8 +22,12 @@ const Settings = () => {
         className="w-full"
       >
         <TabsList className="w-full">
-          <TabsTrigger value="ollama-local">Ollama Local</TabsTrigger>
-          <TabsTrigger value="ollama-cloud">Ollama Cloud</TabsTrigger>
+          <TabsTrigger value="ollama-local">
+            Ollama Local <ComputerIcon />
+          </TabsTrigger>
+          <TabsTrigger value="ollama-cloud">
+            Ollama Cloud <CloudIcon />
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="ollama-local">

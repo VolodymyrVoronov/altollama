@@ -1,7 +1,7 @@
 import ImagesView from "./ImagesView";
 import ImageUploader from "./ImageUploader";
 
-const App = () => {
+const Main = () => {
   return (
     <main className="flex h-[calc(100svh-48px)] flex-col gap-2">
       <ImageUploader />
@@ -13,4 +13,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Main;
