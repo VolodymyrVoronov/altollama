@@ -9,6 +9,7 @@ import { useGenerateAltTextImages } from "@/hooks/useGenerateAltTextImages";
 import { useImageStorage } from "@/hooks/useImageStorage";
 import { selectedOllamaLocalModel, userPrompt } from "@/stores/app";
 
+import { Pill } from "@/components/kibo-ui/pill";
 import {
   Empty,
   EmptyDescription,
@@ -21,6 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Progress } from "@/components/ui/progress";
 import ImageView from "./ImageView";
 import { Button } from "./ui/button";
 import { ButtonGroup } from "./ui/button-group";
@@ -46,6 +48,9 @@ const ImagesView = () => {
   const {
     generateAltTexts,
     cancelAltTextsGeneration,
+    progressPercentage,
+    totalCount,
+    processedCount,
     isGeneratingAltTextsImage,
     generatingAltTextsImageId,
     errorAltTextsImage,
@@ -118,7 +123,7 @@ const ImagesView = () => {
 
   return (
     <>
-      <div className="flex w-full flex-row items-center justify-between">
+      <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row">
         <ButtonGroup>
           <Button
             size="sm"
@@ -144,7 +149,7 @@ const ImagesView = () => {
               onClick={onCancelAltTextsGeneration}
               disabled={!isGeneratingAltTextImage && !isGeneratingAltTextsImage}
             >
-              Stop processing all images <BanIcon />
+              Stop processing <BanIcon />
             </Button>
           ) : null}
         </ButtonGroup>
@@ -194,6 +199,20 @@ const ImagesView = () => {
           </Popover>
         </ButtonGroup>
       </div>
+
+      {isGeneratingAltTextsImage ? (
+        <div className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-2">
+          <Pill variant="default" className="px-2 py-0.5">
+            {progressPercentage} %
+          </Pill>
+
+          <Progress value={progressPercentage} />
+
+          <Pill variant="default" className="px-2 py-0.5">
+            {processedCount}/{totalCount} processed
+          </Pill>
+        </div>
+      ) : null}
 
       <div className="h-full w-full">
         <VirtuosoGrid

@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { atomWithMutation } from "jotai-tanstack-query";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { generateOllamaLocalAltText } from "@/services/api/ollama-local";
 import { db } from "@/services/db/index-db";
@@ -47,6 +47,8 @@ export const useGenerateAltTextImages = () => {
   const controllerRef = useRef<AbortController | null>(null);
 
   const [isBatchActive, setIsBatchActive] = useState(false);
+  const [completedCount, setCompletedCount] = useState(0);
+  const [totalInBatch, setTotalInBatch] = useState(0);
 
   const generateAltTexts = async (
     imageIds: number[],
@@ -54,6 +56,8 @@ export const useGenerateAltTextImages = () => {
     model: string,
   ) => {
     setIsBatchActive(true);
+    setCompletedCount(0);
+    setTotalInBatch(imageIds.length || 0);
 
     controllerRef.current = new AbortController();
 
@@ -70,6 +74,8 @@ export const useGenerateAltTextImages = () => {
           },
         );
 
+        setCompletedCount((prev) => prev + 1);
+
         // Refresh UI immediately after each individual image is done
         await refreshImages();
       } catch (error) {
@@ -85,12 +91,22 @@ export const useGenerateAltTextImages = () => {
   const cancelAltTextsGeneration = () => {
     controllerRef.current?.abort();
     setIsBatchActive(false);
+    setCompletedCount(0);
   };
+
+  const progressPercentage = useMemo(() => {
+    if (totalInBatch === 0) return 0;
+
+    return Math.round((completedCount / totalInBatch) * 100);
+  }, [completedCount, totalInBatch]);
 
   return {
     generateAltTexts,
     cancelAltTextsGeneration,
 
+    progressPercentage,
+    processedCount: completedCount,
+    totalCount: totalInBatch,
     isGeneratingAltTextsImage: isPending || isBatchActive,
     generatingAltTextsImageId: isPending ? variables?.imageId : null,
     generatedAltTexts: data?.altText,
