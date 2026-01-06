@@ -9,3 +9,5 @@ export const DEFAULT_PROMPT = `Act as an Accessibility Specialist. Your task is 
 
   Provide only the list of variants.
 `;
+
+export const IS_DEV_MODE = process.env.NODE_ENV === "development";

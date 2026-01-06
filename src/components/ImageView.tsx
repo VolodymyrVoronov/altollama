@@ -86,7 +86,7 @@ const ImageView = ({
         <CardTitle className="truncate leading-normal" title={image.name}>
           {image.name}
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-pretty">
           {image.image_alt_text ? image.image_alt_text : "-"}
         </CardDescription>
       </CardHeader>
