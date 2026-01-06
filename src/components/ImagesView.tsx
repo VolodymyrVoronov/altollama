@@ -58,8 +58,6 @@ const ImagesView = () => {
 
   const [showPopover, setShowPopover] = useState(false);
 
-  console.log("images", images);
-
   if (!images.length) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center gap-4">

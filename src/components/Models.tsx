@@ -1,7 +1,9 @@
-import { InfoIcon } from "lucide-react";
+import { HardDriveIcon, InfoIcon } from "lucide-react";
 
+import { renderBytes } from "@/helpers";
 import type { IOllamaModel } from "@/types";
 
+import { Pill } from "@/components/kibo-ui/pill";
 import {
   Field,
   FieldContent,
@@ -55,18 +57,93 @@ const Models = ({ models, model, disabled, onModelChange }: IModelsProps) => {
             value={model || ""}
             onValueChange={onModelChange}
             disabled={disabled}
-            className="grid h-full grid-cols-1 content-start items-start gap-2 overflow-y-auto xl:grid-cols-2"
+            className="grid h-full grid-cols-1 content-start items-start gap-2 overflow-y-auto"
           >
             {models?.map((model) => (
               <FieldLabel key={model.name} htmlFor={model.name}>
                 <Field orientation="horizontal">
-                  <FieldContent>
-                    <FieldTitle>{model.name}</FieldTitle>
-                    <FieldDescription>
-                      {model.details.family} / {model.details.format} /{" "}
-                      {model.details.parameter_size} /{" "}
-                      {model.details.quantization_level}
+                  <FieldContent className="flex flex-col gap-1">
+                    <FieldTitle>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Pill variant="default" className="px-2 py-1">
+                            {model.name}
+                          </Pill>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Model name</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </FieldTitle>
+
+                    <FieldDescription className="m-0! flex flex-row flex-wrap gap-1">
+                      {model.details.family ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Pill variant="outline" className="px-2 py-1">
+                              {model.details.family}
+                            </Pill>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Model family</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : null}
+
+                      {model.details.format ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Pill variant="outline" className="px-2 py-1">
+                              {model.details.format}
+                            </Pill>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Model format</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : null}
+
+                      {model.details.parameter_size ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Pill variant="outline" className="px-2 py-1">
+                              {model.details.parameter_size}
+                            </Pill>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Model parameter size</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : null}
+
+                      {model.details.quantization_level ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Pill variant="outline" className="px-2 py-1">
+                              {model.details.quantization_level}
+                            </Pill>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Model quantization level</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : null}
                     </FieldDescription>
+
+                    {model.size ? (
+                      <FieldDescription className="m-0!">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Pill variant="secondary" className="px-2 py-1">
+                              {renderBytes(model.size)} <HardDriveIcon />
+                            </Pill>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Model file size</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </FieldDescription>
+                    ) : null}
                   </FieldContent>
 
                   <RadioGroupItem value={model.name} id={model.name} />

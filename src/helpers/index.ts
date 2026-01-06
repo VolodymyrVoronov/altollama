@@ -21,3 +21,21 @@ export const fileToBase64 = (file: File): Promise<string> => {
     reader.readAsDataURL(file);
   });
 };
+
+/**
+ * Converts bytes to a human-readable format
+ */
+export const renderBytes = (bytes: number): string => {
+  if (bytes === 0) return "0B";
+
+  const units = ["B", "KB", "MB", "GB", "TB", "PB"];
+  let size = bytes;
+  let unitIndex = 0;
+
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024;
+    unitIndex++;
+  }
+
+  return `${size.toFixed(2)}${units[unitIndex]}`;
+};

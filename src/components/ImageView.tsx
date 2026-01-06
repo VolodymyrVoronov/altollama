@@ -83,7 +83,9 @@ const ImageView = ({
       </CardContent>
 
       <CardHeader className="px-3">
-        <CardTitle className="truncate leading-normal">{image.name}</CardTitle>
+        <CardTitle className="truncate leading-normal" title={image.name}>
+          {image.name}
+        </CardTitle>
         <CardDescription>
           {image.image_alt_text ? image.image_alt_text : "-"}
         </CardDescription>
@@ -118,7 +120,7 @@ const ImageView = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Delete image. This action is permanent.</p>
+              <p>Delete image. This action is permanent</p>
             </TooltipContent>
           </Tooltip>
         </ButtonGroup>
