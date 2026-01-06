@@ -11,11 +11,13 @@ const generateAltTextAtom = atomWithMutation(() => ({
     imageId,
     userPrompt,
     model,
+    selectedOllamaType,
     signal,
   }: {
     imageId: number;
     userPrompt: string;
     model: string;
+    selectedOllamaType: string;
     signal: AbortSignal;
   }) => {
     if (!model) throw new Error("No model selected");
@@ -50,11 +52,18 @@ export const useGenerateAltTextImage = () => {
     imageId: number,
     userPrompt: string,
     model: string,
+    selectedOllamaType: string,
   ) => {
     controllerRef.current = new AbortController();
 
     mutate(
-      { imageId, userPrompt, model, signal: controllerRef.current?.signal },
+      {
+        imageId,
+        userPrompt,
+        model,
+        selectedOllamaType,
+        signal: controllerRef.current?.signal,
+      },
       {
         onSuccess: async () => refreshImages(),
         onError: () => {

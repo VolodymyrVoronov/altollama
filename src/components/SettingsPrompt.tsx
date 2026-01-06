@@ -2,7 +2,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { InfoIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { userPrompt } from "@/stores/app";
+import { userPromptAtom } from "@/stores/app";
 
 import {
   Tooltip,
@@ -12,9 +12,9 @@ import {
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 
-const SettingsLocalPrompt = () => {
-  const prompt = useAtomValue(userPrompt);
-  const setUserPrompt = useSetAtom(userPrompt);
+const SettingsPrompt = () => {
+  const prompt = useAtomValue(userPromptAtom);
+  const setUserPrompt = useSetAtom(userPromptAtom);
 
   const isPromptEmpty = prompt.trim() === "";
 
@@ -52,4 +52,4 @@ const SettingsLocalPrompt = () => {
   );
 };
 
-export default SettingsLocalPrompt;
+export default SettingsPrompt;

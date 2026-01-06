@@ -2,7 +2,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { CircleXIcon, FolderIcon } from "lucide-react";
 
 import { useOllamaLocalModels } from "@/hooks/useOllamaLocalModels";
-import { selectedOllamaLocalModel } from "@/stores/app";
+import { selectedOllamaLocalModelAtom } from "@/stores/app";
 
 import {
   Item,
@@ -12,12 +12,12 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import Models from "./Models";
-import SettingsLocalPrompt from "./SettingsLocalPrompt";
+import SettingsPrompt from "./SettingsPrompt";
 import { Spinner } from "./ui/spinner";
 
 const SettingsLocalModels = () => {
-  const selectedLocalModel = useAtomValue(selectedOllamaLocalModel);
-  const setLocalModel = useSetAtom(selectedOllamaLocalModel);
+  const selectedLocalModel = useAtomValue(selectedOllamaLocalModelAtom);
+  const setLocalModel = useSetAtom(selectedOllamaLocalModelAtom);
 
   const { models, isPending, isError, error } = useOllamaLocalModels();
 
@@ -64,7 +64,7 @@ const SettingsLocalModels = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <SettingsLocalPrompt />
+      <SettingsPrompt />
 
       <Models
         models={models?.models}

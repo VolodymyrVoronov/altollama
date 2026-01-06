@@ -7,7 +7,11 @@ import { toast } from "sonner";
 import { useGenerateAltTextImage } from "@/hooks/useGenerateAltTextImage";
 import { useGenerateAltTextImages } from "@/hooks/useGenerateAltTextImages";
 import { useImageStorage } from "@/hooks/useImageStorage";
-import { selectedOllamaLocalModel, userPrompt } from "@/stores/app";
+import {
+  selectedOllamaLocalModelAtom,
+  selectedOllamaTypeAtom,
+  userPromptAtom,
+} from "@/stores/app";
 
 import { Pill } from "@/components/kibo-ui/pill";
 import {
@@ -40,6 +44,7 @@ const ImagesView = () => {
   const {
     generateAltText,
     cancelAltTextGeneration,
+
     isGeneratingAltTextImage,
     generatingAltTextImageId,
     errorAltTextImage,
@@ -48,6 +53,7 @@ const ImagesView = () => {
   const {
     generateAltTexts,
     cancelAltTextsGeneration,
+
     progressPercentage,
     totalCount,
     processedCount,
@@ -56,10 +62,11 @@ const ImagesView = () => {
     errorAltTextsImage,
   } = useGenerateAltTextImages();
 
-  const prompt = useAtomValue(userPrompt, {
+  const prompt = useAtomValue(userPromptAtom, {
     delay: 500,
   });
-  const selectedLocalModel = useAtomValue(selectedOllamaLocalModel);
+  const selectedLocalModel = useAtomValue(selectedOllamaLocalModelAtom);
+  const selectedOllamaType = useAtomValue(selectedOllamaTypeAtom);
 
   const [showPopover, setShowPopover] = useState(false);
 
@@ -95,7 +102,10 @@ const ImagesView = () => {
     }
 
     if (id && selectedLocalModel) {
-      generateAltText(id, prompt, selectedLocalModel);
+      const model =
+        selectedOllamaType === "ollama-local" ? selectedLocalModel : "";
+
+      generateAltText(id, prompt, model, selectedOllamaType);
     }
   };
 
@@ -111,12 +121,14 @@ const ImagesView = () => {
       .filter((id): id is number => id !== undefined);
 
     if (imageIds.length && selectedLocalModel) {
-      generateAltTexts(imageIds, prompt, selectedLocalModel);
+      const model =
+        selectedOllamaType === "ollama-local" ? selectedLocalModel : "";
+
+      generateAltTexts(imageIds, prompt, model, selectedOllamaType);
     }
   };
 
   const onCancelAltTextGeneration = () => cancelAltTextGeneration();
-
   const onCancelAltTextsGeneration = () => cancelAltTextsGeneration();
 
   const onDelete = (id: number) => deleteImage(id);

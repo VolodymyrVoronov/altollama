@@ -11,11 +11,13 @@ const generateAltTextsAtom = atomWithMutation(() => ({
     imageId,
     userPrompt,
     model,
+    selectedOllamaType,
     signal,
   }: {
     imageId: number;
     userPrompt: string;
     model: string;
+    selectedOllamaType: string;
     signal: AbortSignal;
   }) => {
     if (!model) throw new Error("No model selected");
@@ -54,6 +56,7 @@ export const useGenerateAltTextImages = () => {
     imageIds: number[],
     userPrompt: string,
     model: string,
+    selectedOllamaType: string,
   ) => {
     setIsBatchActive(true);
     setCompletedCount(0);
@@ -66,7 +69,13 @@ export const useGenerateAltTextImages = () => {
         // mutateAsync returns a promise, allowing us to wait
         // for one to finish before starting the next.
         await mutateAsync(
-          { imageId, userPrompt, model, signal: controllerRef.current?.signal },
+          {
+            imageId,
+            userPrompt,
+            model,
+            selectedOllamaType,
+            signal: controllerRef.current?.signal,
+          },
           {
             onError: () => {
               reset();
