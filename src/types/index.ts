@@ -20,6 +20,28 @@ export interface IOllamaTagsResponse {
   models: IOllamaModel[];
 }
 
+export interface OllamaChatMessage {
+  role: "assistant" | "user" | "system";
+  content: string;
+  images?: string[] | null;
+}
+
+export interface OllamaChatResponse {
+  model: string;
+  created_at: string;
+  message: OllamaChatMessage;
+  done: boolean;
+  done_reason: string;
+
+  total_duration: number;
+  load_duration: number;
+  prompt_eval_count: number;
+  prompt_eval_duration: number;
+  eval_count: number;
+  eval_duration: number;
+  error?: string;
+}
+
 export interface ImageItem {
   id?: number;
   name: string;

@@ -69,7 +69,7 @@ const ImageView = ({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Created at {format(image.createdAt, TIME_FORMAT)}</p>
+            <p>Image uploaded at {format(image.createdAt, TIME_FORMAT)}</p>
           </TooltipContent>
         </Tooltip>
 

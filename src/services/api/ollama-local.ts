@@ -1,4 +1,6 @@
-import type { IOllamaTagsResponse } from "@/types";
+import { DEFAULT_PROMPT } from "@/constants";
+import { fileToBase64 } from "@/helpers";
+import type { IOllamaTagsResponse, OllamaChatResponse } from "@/types";
 
 const OLLAMA_LOCAL_API_BASE = "http://localhost:11434/api";
 
@@ -40,3 +42,58 @@ export const fetchOllamaLocalModels =
       throw error;
     }
   };
+
+export const generateOllamaLocalAltText = async ({
+  userPrompt,
+  model,
+  image,
+  signal,
+}: {
+  userPrompt: string;
+  model: string;
+  image: File;
+  signal: AbortSignal;
+}): Promise<OllamaChatResponse> => {
+  const prompt = userPrompt || DEFAULT_PROMPT;
+  const url = `${OLLAMA_LOCAL_API_BASE}/chat`;
+
+  // 1. Convert image using the helper
+  const base64Image = await fileToBase64(image);
+
+  // 2. Build the JSON body
+  const payload = {
+    model,
+    messages: [
+      {
+        role: "system",
+        content: prompt,
+      },
+      {
+        role: "user",
+        images: [base64Image],
+      },
+    ],
+    stream: false,
+    options: {
+      temperature: 0.1,
+    },
+  };
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+    signal,
+  });
+
+  const data: OllamaChatResponse = await response.json();
+
+  if (!response.ok) {
+    console.error(data);
+    throw new Error(data.error || "Failed to generate description");
+  }
+
+  return data;
+};

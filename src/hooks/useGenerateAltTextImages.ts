@@ -1,40 +1,37 @@
 import { useAtom } from "jotai";
 import { atomWithMutation } from "jotai-tanstack-query";
-
-import { db } from "@/services/db/index-db";
-import { useImageStorage } from "./useImageStorage";
 import { useRef, useState } from "react";
 
-async function mockVisionAIRequest(
-  imageId: number,
-  signal?: AbortSignal,
-): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(
-      () =>
-        resolve(`AI Description. Test test test. Test test test. ${imageId}`),
-      5000,
-    );
+import { generateOllamaLocalAltText } from "@/services/api/ollama-local";
+import { db } from "@/services/db/index-db";
+import { useImageStorage } from "./useImageStorage";
 
-    signal?.addEventListener("abort", () => {
-      clearTimeout(timer);
-      reject(new Error("Operation cancelled"));
-    });
-  });
-}
 const generateAltTextsAtom = atomWithMutation(() => ({
   mutationFn: async ({
     imageId,
+    userPrompt,
+    model,
     signal,
   }: {
     imageId: number;
-    signal?: AbortSignal;
+    userPrompt: string;
+    model: string;
+    signal: AbortSignal;
   }) => {
+    if (!model) throw new Error("No model selected");
+
     const image = await db.images.get(imageId);
 
     if (!image || !image.file) throw new Error("Image not found");
 
-    const altText = await mockVisionAIRequest(imageId, signal);
+    const response = await generateOllamaLocalAltText({
+      image: image.file,
+      userPrompt,
+      model,
+      signal,
+    });
+
+    const altText = response.message.content;
 
     await db.images.update(imageId, { image_alt_text: altText });
 
@@ -51,7 +48,11 @@ export const useGenerateAltTextImages = () => {
 
   const [isBatchActive, setIsBatchActive] = useState(false);
 
-  const generateAltTexts = async (imageIds: number[]) => {
+  const generateAltTexts = async (
+    imageIds: number[],
+    userPrompt: string,
+    model: string,
+  ) => {
     setIsBatchActive(true);
 
     controllerRef.current = new AbortController();
@@ -61,7 +62,7 @@ export const useGenerateAltTextImages = () => {
         // mutateAsync returns a promise, allowing us to wait
         // for one to finish before starting the next.
         await mutateAsync(
-          { imageId, signal: controllerRef.current?.signal },
+          { imageId, userPrompt, model, signal: controllerRef.current?.signal },
           {
             onError: () => {
               reset();

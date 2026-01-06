@@ -1,3 +1,4 @@
+import { useAtomValue } from "jotai";
 import { BanIcon, FolderIcon, SparklesIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { VirtuosoGrid } from "react-virtuoso";
@@ -6,6 +7,7 @@ import { toast } from "sonner";
 import { useGenerateAltTextImage } from "@/hooks/useGenerateAltTextImage";
 import { useGenerateAltTextImages } from "@/hooks/useGenerateAltTextImages";
 import { useImageStorage } from "@/hooks/useImageStorage";
+import { selectedOllamaLocalModel, userPrompt } from "@/stores/app";
 
 import {
   Empty,
@@ -23,6 +25,12 @@ import ImageView from "./ImageView";
 import { Button } from "./ui/button";
 import { ButtonGroup } from "./ui/button-group";
 import { Spinner } from "./ui/spinner";
+
+const showErrorNoModelSelected = () => {
+  toast.error("Please select a model before generating alt text.", {
+    richColors: true,
+  });
+};
 
 const ImagesView = () => {
   const { images, deleteImage, deleteAllImages } = useImageStorage();
@@ -42,6 +50,11 @@ const ImagesView = () => {
     generatingAltTextsImageId,
     errorAltTextsImage,
   } = useGenerateAltTextImages();
+
+  const prompt = useAtomValue(userPrompt, {
+    delay: 1000,
+  });
+  const selectedLocalModel = useAtomValue(selectedOllamaLocalModel);
 
   const [showPopover, setShowPopover] = useState(false);
 
@@ -72,18 +85,30 @@ const ImagesView = () => {
   }
 
   const onGenerateAltText = (id: number) => {
-    if (id) {
-      generateAltText(id);
+    if (!selectedLocalModel) {
+      showErrorNoModelSelected();
+
+      return;
+    }
+
+    if (id && selectedLocalModel) {
+      generateAltText(id, prompt, selectedLocalModel);
     }
   };
 
   const onGenerateAltTexts = () => {
+    if (!selectedLocalModel) {
+      showErrorNoModelSelected();
+
+      return;
+    }
+
     const imageIds = images
       .map((img) => img.id)
       .filter((id): id is number => id !== undefined);
 
-    if (imageIds.length) {
-      generateAltTexts(imageIds);
+    if (imageIds.length && selectedLocalModel) {
+      generateAltTexts(imageIds, prompt, selectedLocalModel);
     }
   };
 

@@ -1,40 +1,37 @@
 import { useAtom } from "jotai";
 import { atomWithMutation } from "jotai-tanstack-query";
-
-import { db } from "@/services/db/index-db";
-import { useImageStorage } from "./useImageStorage";
 import { useRef } from "react";
 
-async function mockVisionAIRequest(
-  imageId: number,
-  signal?: AbortSignal,
-): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(
-      () => resolve(`Some kind of test. ${imageId}`),
-      5000,
-    );
-
-    signal?.addEventListener("abort", () => {
-      clearTimeout(timer);
-      reject(new Error("Operation cancelled"));
-    });
-  });
-}
+import { generateOllamaLocalAltText } from "@/services/api/ollama-local";
+import { db } from "@/services/db/index-db";
+import { useImageStorage } from "./useImageStorage";
 
 const generateAltTextAtom = atomWithMutation(() => ({
   mutationFn: async ({
     imageId,
+    userPrompt,
+    model,
     signal,
   }: {
     imageId: number;
-    signal?: AbortSignal;
+    userPrompt: string;
+    model: string;
+    signal: AbortSignal;
   }) => {
+    if (!model) throw new Error("No model selected");
+
     const image = await db.images.get(imageId);
 
     if (!image || !image.file) throw new Error("Image not found");
 
-    const altText = await mockVisionAIRequest(imageId, signal);
+    const response = await generateOllamaLocalAltText({
+      image: image.file,
+      userPrompt,
+      model,
+      signal,
+    });
+
+    const altText = response.message.content;
 
     await db.images.update(imageId, { image_alt_text: altText });
 
@@ -49,11 +46,15 @@ export const useGenerateAltTextImage = () => {
 
   const controllerRef = useRef<AbortController | null>(null);
 
-  const generateAltText = async (imageId: number) => {
+  const generateAltText = async (
+    imageId: number,
+    userPrompt: string,
+    model: string,
+  ) => {
     controllerRef.current = new AbortController();
 
     mutate(
-      { imageId, signal: controllerRef.current?.signal },
+      { imageId, userPrompt, model, signal: controllerRef.current?.signal },
       {
         onSuccess: async () => refreshImages(),
         onError: () => {
