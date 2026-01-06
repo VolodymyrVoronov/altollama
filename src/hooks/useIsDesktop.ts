@@ -18,15 +18,10 @@ function detectIsDesktop(): boolean {
   const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
   const canHover = window.matchMedia("(hover: hover)").matches;
 
-  // 3. Screen width fallback
-  const isSmallScreen = window.innerWidth < 768;
-
   // Decision logic
   if (isMobileUA) return false;
 
   if (!hasFinePointer && !canHover) return false;
-
-  if (isSmallScreen) return false;
 
   return true;
 }
