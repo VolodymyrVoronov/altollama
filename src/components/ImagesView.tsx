@@ -65,6 +65,12 @@ const ImagesView = () => {
     );
   }
 
+  if (errorAltTextImage || errorAltTextsImage) {
+    toast.error("Error while processing images. Please try again later.", {
+      richColors: true,
+    });
+  }
+
   const onGenerateAltText = (id: number) => {
     if (id) {
       generateAltText(id);
@@ -86,12 +92,6 @@ const ImagesView = () => {
   const onCancelAltTextsGeneration = () => cancelAltTextsGeneration();
 
   const onDelete = (id: number) => deleteImage(id);
-
-  if (errorAltTextImage || errorAltTextsImage) {
-    toast.error("Error while processing images. Please try again later.", {
-      richColors: true,
-    });
-  }
 
   return (
     <>
