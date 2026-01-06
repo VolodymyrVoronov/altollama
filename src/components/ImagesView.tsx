@@ -1,4 +1,5 @@
-import { BanIcon, SparklesIcon, Trash2Icon } from "lucide-react";
+import { BanIcon, FolderIcon, SparklesIcon, Trash2Icon } from "lucide-react";
+import { useState } from "react";
 import { VirtuosoGrid } from "react-virtuoso";
 import { toast } from "sonner";
 
@@ -6,6 +7,18 @@ import { useGenerateAltTextImage } from "@/hooks/useGenerateAltTextImage";
 import { useGenerateAltTextImages } from "@/hooks/useGenerateAltTextImages";
 import { useImageStorage } from "@/hooks/useImageStorage";
 
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import ImageView from "./ImageView";
 import { Button } from "./ui/button";
 import { ButtonGroup } from "./ui/button-group";
@@ -30,12 +43,24 @@ const ImagesView = () => {
     errorAltTextsImage,
   } = useGenerateAltTextImages();
 
+  const [showPopover, setShowPopover] = useState(false);
+
   console.log("images", images);
 
   if (!images.length) {
     return (
-      <div className="flex w-full flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold">No images found</h1>
+      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FolderIcon />
+            </EmptyMedia>
+            <EmptyTitle>No images found</EmptyTitle>
+            <EmptyDescription>
+              Start uploading images to get started and generate alt text/s
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       </div>
     );
   }
@@ -102,14 +127,48 @@ const ImagesView = () => {
         </ButtonGroup>
 
         <ButtonGroup>
-          <Button
-            size="sm"
-            variant="destructive"
-            onClick={deleteAllImages}
-            disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
-          >
-            Delete all images <Trash2Icon />
-          </Button>
+          <Popover open={showPopover} onOpenChange={setShowPopover}>
+            <PopoverTrigger asChild>
+              <Button
+                size="sm"
+                variant="destructive"
+                disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
+              >
+                Delete all images <Trash2Icon />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="flex flex-col gap-2">
+              <p>
+                Are you sure you want to delete all images? The process is
+                irreversible.
+              </p>
+
+              <ButtonGroup className="w-full">
+                <Button
+                  onClick={() => setShowPopover(false)}
+                  size="sm"
+                  className="flex-1"
+                >
+                  No
+                </Button>
+
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    deleteAllImages();
+                    setShowPopover(false);
+                  }}
+                  disabled={
+                    isGeneratingAltTextImage || isGeneratingAltTextsImage
+                  }
+                  size="sm"
+                  className="flex-1"
+                >
+                  Yes
+                </Button>
+              </ButtonGroup>
+            </PopoverContent>
+          </Popover>
         </ButtonGroup>
       </div>
 
