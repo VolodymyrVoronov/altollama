@@ -65,11 +65,8 @@ export const generateOllamaLocalAltText = async ({
     model,
     messages: [
       {
-        role: "system",
-        content: prompt,
-      },
-      {
         role: "user",
+        content: prompt,
         images: [base64Image],
       },
     ],

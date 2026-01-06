@@ -52,7 +52,7 @@ const ImagesView = () => {
   } = useGenerateAltTextImages();
 
   const prompt = useAtomValue(userPrompt, {
-    delay: 1000,
+    delay: 500,
   });
   const selectedLocalModel = useAtomValue(selectedOllamaLocalModel);
 
