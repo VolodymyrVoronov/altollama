@@ -9,7 +9,7 @@ import { Toaster } from "./components/ui/sonner.tsx";
 
 const App = () => {
   return (
-    <div>
+    <>
       <Provider>
         <ThemeProvider>
           <div className="grid-row-[auto_1fr] grid h-svh w-full grid-cols-1 content-start gap-2 overflow-hidden p-1">
@@ -23,7 +23,7 @@ const App = () => {
         </ThemeProvider>
       </Provider>
       <Toaster />
-    </div>
+    </>
   );
 };
 
