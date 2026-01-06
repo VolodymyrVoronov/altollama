@@ -15,13 +15,14 @@ function detectIsDesktop(): boolean {
   const isMobileUA = MOBILE_USER_AGENT_REGEX.test(userAgent);
 
   // 2. Pointer & hover capability check
-  const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
-  const canHover = window.matchMedia("(hover: hover)").matches;
+  const hasDesktopInput =
+    window.matchMedia("(pointer: fine)").matches &&
+    window.matchMedia("(hover: hover)").matches;
 
   // Decision logic
   if (isMobileUA) return false;
 
-  if (!hasFinePointer && !canHover) return false;
+  if (!hasDesktopInput) return false;
 
   return true;
 }
