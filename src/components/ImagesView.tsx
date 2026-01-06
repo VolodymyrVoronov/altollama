@@ -217,7 +217,7 @@ const ImagesView = () => {
       <div className="h-full w-full">
         <VirtuosoGrid
           style={{ height: "100%" }}
-          listClassName="grid grid-cols-1 content-start items-stretch gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          listClassName="grid grid-cols-1 content-start items-stretch gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]"
           totalCount={images?.length}
           itemContent={(index) => {
             const image = images?.[index];
