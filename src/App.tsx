@@ -7,24 +7,13 @@ import Header from "./components/Header.tsx";
 import Main from "./components/Main.tsx";
 import Settings from "./components/Settings.tsx";
 import { Toaster } from "./components/ui/sonner.tsx";
+import WarningDeviceMessage from "./components/WarningDeviceMessage.tsx";
 
 const App = () => {
   const isDesktop = useIsDesktop();
 
   if (!isDesktop) {
-    return (
-      <div className="flex h-svh w-full flex-col items-center justify-center gap-2">
-        <h1 className="text-2xl font-bold">
-          This app is not supported on mobile.
-        </h1>
-
-        <p>Please use a desktop computer or laptop to use this app.</p>
-
-        <small className="italic">
-          Mobile support will be added in the future.
-        </small>
-      </div>
-    );
+    return <WarningDeviceMessage />;
   }
 
   return (
