@@ -58,6 +58,11 @@ export const useImageStorage = () => {
     await refreshImages();
   };
 
+  const deleteAllImages = async () => {
+    await db.images.clear();
+    await refreshImages();
+  };
+
   const updateImage = useCallback(
     async (id: number, updates: Partial<Omit<ImageItem, "id">>) => {
       try {
@@ -73,5 +78,12 @@ export const useImageStorage = () => {
     [refreshImages],
   );
 
-  return { images, uploadImages, updateImage, deleteImage, refreshImages };
+  return {
+    images,
+    uploadImages,
+    updateImage,
+    deleteImage,
+    deleteAllImages,
+    refreshImages,
+  };
 };

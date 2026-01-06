@@ -1,8 +1,14 @@
 import { useAtomValue, useSetAtom } from "jotai";
+import { InfoIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { userPrompt } from "@/stores/app";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 
@@ -15,11 +21,20 @@ const SettingsLocalPrompt = () => {
   return (
     <div className="mx-0.5">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="prompt" className="inline-flex items-center">
+        <Label htmlFor="prompt" className="inline-flex w-full items-center">
           <span>Your Prompt</span>
 
           {isPromptEmpty && (
-            <span className="text-red-500">(Prompt is required)</span>
+            <small className="text-red-500">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <InfoIcon className="inline size-3" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Enter your prompt, or default one will be used</p>
+                </TooltipContent>
+              </Tooltip>
+            </small>
           )}
         </Label>
 
@@ -30,7 +45,7 @@ const SettingsLocalPrompt = () => {
           })}
           value={prompt}
           onChange={(e) => setUserPrompt(e.target.value)}
-          placeholder="Enter a prompt..."
+          placeholder="Enter your prompt..."
         />
       </div>
     </div>

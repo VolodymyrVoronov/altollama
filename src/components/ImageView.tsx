@@ -1,10 +1,9 @@
 import { format } from "date-fns";
-import { BanIcon, InfoIcon, SparklesIcon, Trash2Icon } from "lucide-react";
+import { BanIcon, InfoIcon, SparkleIcon, Trash2Icon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { ImageDisplay } from "@/types";
 
-import { ImageZoom } from "@/components/kibo-ui/image-zoom";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Card,
@@ -74,24 +73,19 @@ const ImageView = ({
           </TooltipContent>
         </Tooltip>
 
-        <ImageZoom isDisabled={generating}>
-          <img
-            src={image.previewUrl || ""}
-            alt={image.name || ""}
-            className={cn(
-              "aspect-video h-56 rounded-t-xl object-cover sm:h-50",
-              {
-                "animate-pulse": generating,
-              },
-            )}
-          />
-        </ImageZoom>
+        <img
+          src={image.previewUrl || ""}
+          alt={image.name || ""}
+          className={cn("aspect-video h-56 rounded-t-xl object-cover sm:h-50", {
+            "animate-pulse": generating,
+          })}
+        />
       </CardContent>
 
       <CardHeader className="px-3">
         <CardTitle className="truncate leading-normal">{image.name}</CardTitle>
         <CardDescription>
-          {image.image_alt_text ? image.image_alt_text : "No alt text yet."}
+          {image.image_alt_text ? image.image_alt_text : "-"}
         </CardDescription>
       </CardHeader>
 
@@ -104,7 +98,7 @@ const ImageView = ({
                 disabled={disabled}
                 onClick={onGenerateAltTextButtonClick}
               >
-                {generating ? <Spinner /> : <SparklesIcon />}
+                {generating ? <Spinner /> : <SparkleIcon />}
               </Button>
             </TooltipTrigger>
             <TooltipContent>

@@ -1,3 +1,4 @@
+import { BanIcon, SparklesIcon, Trash2Icon } from "lucide-react";
 import { VirtuosoGrid } from "react-virtuoso";
 import { toast } from "sonner";
 
@@ -11,7 +12,7 @@ import { ButtonGroup } from "./ui/button-group";
 import { Spinner } from "./ui/spinner";
 
 const ImagesView = () => {
-  const { images, deleteImage } = useImageStorage();
+  const { images, deleteImage, deleteAllImages } = useImageStorage();
 
   const {
     generateAltText,
@@ -30,6 +31,14 @@ const ImagesView = () => {
   } = useGenerateAltTextImages();
 
   console.log("images", images);
+
+  if (!images.length) {
+    return (
+      <div className="flex w-full flex-col items-center justify-center gap-4">
+        <h1 className="text-2xl font-bold">No images found</h1>
+      </div>
+    );
+  }
 
   const onGenerateAltText = (id: number) => {
     if (id) {
@@ -61,33 +70,48 @@ const ImagesView = () => {
 
   return (
     <>
-      <ButtonGroup>
-        <Button
-          size="sm"
-          onClick={onGenerateAltTexts}
-          disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
-        >
-          {isGeneratingAltTextImage || isGeneratingAltTextsImage ? (
-            <>
-              Processing...
-              <Spinner />
-            </>
-          ) : (
-            <>Process all images</>
-          )}
-        </Button>
+      <div className="flex w-full flex-row items-center justify-between">
+        <ButtonGroup>
+          <Button
+            size="sm"
+            onClick={onGenerateAltTexts}
+            disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
+          >
+            {isGeneratingAltTextImage || isGeneratingAltTextsImage ? (
+              <>
+                Processing...
+                <Spinner />
+              </>
+            ) : (
+              <>
+                Process all images <SparklesIcon />
+              </>
+            )}
+          </Button>
 
-        {isGeneratingAltTextsImage ? (
+          {isGeneratingAltTextsImage ? (
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={onCancelAltTextsGeneration}
+              disabled={!isGeneratingAltTextImage && !isGeneratingAltTextsImage}
+            >
+              Stop processing all images <BanIcon />
+            </Button>
+          ) : null}
+        </ButtonGroup>
+
+        <ButtonGroup>
           <Button
             size="sm"
             variant="destructive"
-            onClick={onCancelAltTextsGeneration}
-            disabled={!isGeneratingAltTextImage && !isGeneratingAltTextsImage}
+            onClick={deleteAllImages}
+            disabled={isGeneratingAltTextImage || isGeneratingAltTextsImage}
           >
-            Stop processing all images
+            Delete all images <Trash2Icon />
           </Button>
-        ) : null}
-      </ButtonGroup>
+        </ButtonGroup>
+      </div>
 
       <div className="h-full w-full">
         <VirtuosoGrid

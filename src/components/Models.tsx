@@ -33,7 +33,7 @@ const Models = ({ models, model, disabled, onModelChange }: IModelsProps) => {
         <div className="flex flex-col">
           <FieldLabel>Ollama models available locally </FieldLabel>
           <FieldDescription className="inline-flex items-center gap-1 text-blue-500">
-            <span> Select a model to get started.</span>
+            <span> Select a model to get started</span>
 
             <Tooltip>
               <TooltipTrigger asChild>
@@ -43,7 +43,7 @@ const Models = ({ models, model, disabled, onModelChange }: IModelsProps) => {
                 <span className="flex w-50 text-balance">
                   NOTE: Please use only models, which support the image
                   processing, otherwise the prompt will not work and the alt
-                  text will not be generated.
+                  text will not be generated
                 </span>
               </TooltipContent>
             </Tooltip>
