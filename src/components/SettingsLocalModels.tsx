@@ -1,19 +1,13 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import { CircleXIcon, FolderIcon } from "lucide-react";
 
 import { useOllamaLocalModels } from "@/hooks/useOllamaLocalModels";
 import { selectedOllamaLocalModelAtom } from "@/stores/app";
 
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
 import Models from "./Models";
+import SettingsModelsEmptyMessage from "./SettingsModelsEmptyMessage";
+import SettingsModelsErrorMessage from "./SettingsModelsErrorMessage";
+import SettingsModelsLoadingMessage from "./SettingsModelsLoadingMessage";
 import SettingsPrompt from "./SettingsPrompt";
-import { Spinner } from "./ui/spinner";
 
 const SettingsLocalModels = () => {
   const selectedLocalModel = useAtomValue(selectedOllamaLocalModelAtom);
@@ -23,43 +17,25 @@ const SettingsLocalModels = () => {
 
   if (isPending)
     return (
-      <Item variant="muted">
-        <ItemMedia>
-          <Spinner />
-        </ItemMedia>
-
-        <ItemContent>
-          <ItemTitle className="line-clamp-1">Loading models...</ItemTitle>
-        </ItemContent>
-      </Item>
+      <SettingsModelsLoadingMessage>
+        Loading models...
+      </SettingsModelsLoadingMessage>
     );
 
   if (isError)
     return (
-      <Item variant="muted">
-        <ItemMedia>
-          <CircleXIcon />
-        </ItemMedia>
-
-        <ItemContent>
-          <ItemTitle className="line-clamp-1">Something went wrong</ItemTitle>
-          <ItemDescription>{error?.message}</ItemDescription>
-        </ItemContent>
-      </Item>
+      <SettingsModelsErrorMessage
+        title="Something went wrong"
+        error={error?.message}
+      />
     );
 
   if (models && models?.models?.length === 0)
     return (
-      <Item variant="muted">
-        <ItemMedia>
-          <FolderIcon />
-        </ItemMedia>
-
-        <ItemContent>
-          <ItemTitle className="line-clamp-1">No models</ItemTitle>
-          <ItemDescription>Try to add a model locally</ItemDescription>
-        </ItemContent>
-      </Item>
+      <SettingsModelsEmptyMessage
+        title="No models"
+        description="Try to add a model locally"
+      />
     );
 
   return (

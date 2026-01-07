@@ -5,6 +5,7 @@ import { selectedOllamaTypeAtom } from "@/stores/app";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SettingsLocal from "./SettingsLocal";
+import SettingsCloud from "./SettingsCloud";
 
 const Settings = () => {
   const selectedOllamaTypeTab = useAtomValue(selectedOllamaTypeAtom);
@@ -35,7 +36,7 @@ const Settings = () => {
         </TabsContent>
 
         <TabsContent value="ollama-cloud">
-          Change your password here.
+          <SettingsCloud />
         </TabsContent>
       </Tabs>
     </aside>
