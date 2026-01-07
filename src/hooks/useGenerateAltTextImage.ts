@@ -43,6 +43,7 @@ const generateAltTextAtom = atomWithMutation(() => ({
           userPrompt,
           model,
           image: image.file,
+          signal,
           apiKey,
         });
 

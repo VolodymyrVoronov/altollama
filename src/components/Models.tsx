@@ -20,10 +20,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { ModelResponse } from "ollama";
 
 export interface IModelsProps {
-  models?: IOllamaModel[] | ModelResponse[];
+  models?: IOllamaModel[];
   model?: string;
   disabled?: boolean;
   modelsContainerClassName?: string;

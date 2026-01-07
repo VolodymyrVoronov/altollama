@@ -2,11 +2,11 @@ import { useAtom, useAtomValue } from "jotai";
 import { atomWithMutation } from "jotai-tanstack-query";
 import { useMemo, useRef, useState } from "react";
 
-import { generateOllamaCloudAltText } from "@/services/api/ollama-cloud";
 import { generateOllamaLocalAltText } from "@/services/api/ollama-local";
 import { db } from "@/services/db/index-db";
 import { apiKeyInputAtom } from "@/stores/app";
 import { useImageStorage } from "./useImageStorage";
+import { generateOllamaCloudAltText } from "@/services/api/ollama-cloud";
 
 const generateAltTextsAtom = atomWithMutation(() => ({
   mutationFn: async ({
@@ -43,6 +43,7 @@ const generateAltTextsAtom = atomWithMutation(() => ({
           image: image.file,
           userPrompt,
           model,
+          signal,
           apiKey,
         });
 

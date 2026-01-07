@@ -76,21 +76,26 @@ export const generateOllamaLocalAltText = async ({
     },
   };
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-    signal,
-  });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      signal,
+    });
 
-  const data: OllamaChatResponse = await response.json();
+    const data: OllamaChatResponse = await response.json();
 
-  if (!response.ok) {
-    console.error(data);
-    throw new Error(data.error || "Failed to generate description");
+    if (!response.ok) {
+      console.error(data);
+      throw new Error(data.error || "Failed to generate description");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Failed to generate description:", error);
+    throw error;
   }
-
-  return data;
 };

@@ -168,8 +168,7 @@ const ImagesView = () => {
             )}
           </Button>
 
-          {isGeneratingAltTextsImage &&
-          selectedOllamaType === "ollama-local" ? (
+          {isGeneratingAltTextsImage ? (
             <Button
               size="sm"
               variant="destructive"
@@ -267,8 +266,7 @@ const ImagesView = () => {
                 }
                 showAbortButton={
                   generatingAltTextImageId === image.id &&
-                  isGeneratingAltTextImage &&
-                  selectedOllamaType === "ollama-local"
+                  isGeneratingAltTextImage
                 }
               />
             );
