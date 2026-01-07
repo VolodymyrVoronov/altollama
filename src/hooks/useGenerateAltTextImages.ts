@@ -1,9 +1,11 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { atomWithMutation } from "jotai-tanstack-query";
 import { useMemo, useRef, useState } from "react";
 
+import { generateOllamaCloudAltText } from "@/services/api/ollama-cloud";
 import { generateOllamaLocalAltText } from "@/services/api/ollama-local";
 import { db } from "@/services/db/index-db";
+import { apiKeyInputAtom } from "@/stores/app";
 import { useImageStorage } from "./useImageStorage";
 
 const generateAltTextsAtom = atomWithMutation(() => ({
@@ -13,12 +15,14 @@ const generateAltTextsAtom = atomWithMutation(() => ({
     model,
     selectedOllamaType,
     signal,
+    apiKey,
   }: {
     imageId: number;
     userPrompt: string;
     model: string;
     selectedOllamaType: string;
     signal: AbortSignal;
+    apiKey: string;
   }) => {
     if (!model) throw new Error("No model selected");
 
@@ -26,12 +30,21 @@ const generateAltTextsAtom = atomWithMutation(() => ({
 
     if (!image || !image.file) throw new Error("Image not found");
 
-    const response = await generateOllamaLocalAltText({
-      image: image.file,
-      userPrompt,
-      model,
-      signal,
-    });
+    const isOllamaLocal = selectedOllamaType === "ollama-local";
+
+    const response = isOllamaLocal
+      ? await generateOllamaLocalAltText({
+          image: image.file,
+          userPrompt,
+          model,
+          signal,
+        })
+      : await generateOllamaCloudAltText({
+          image: image.file,
+          userPrompt,
+          model,
+          apiKey,
+        });
 
     const altText = response.message.content;
 
@@ -42,6 +55,8 @@ const generateAltTextsAtom = atomWithMutation(() => ({
 }));
 
 export const useGenerateAltTextImages = () => {
+  const apiKey = useAtomValue(apiKeyInputAtom);
+
   const [{ mutateAsync, status, data, error, isPending, variables, reset }] =
     useAtom(generateAltTextsAtom);
   const { refreshImages } = useImageStorage();
@@ -75,6 +90,7 @@ export const useGenerateAltTextImages = () => {
             model,
             selectedOllamaType,
             signal: controllerRef.current?.signal,
+            apiKey,
           },
           {
             onError: () => {

@@ -1,8 +1,7 @@
-import { Ollama, type GenerateResponse, type ListResponse } from "ollama";
+import { type ListResponse } from "ollama";
 
 import { DEFAULT_PROMPT, IS_DEV_MODE } from "@/constants";
 import { fileToBase64, getOllamaClient } from "@/helpers";
-import type { IOllamaTagsResponse, OllamaChatResponse } from "@/types";
 
 const OLLAMA_CLOUD_API_BASE = IS_DEV_MODE
   ? "http://localhost:5173/api-proxy"
@@ -38,4 +37,50 @@ export const fetchOllamaCouldModels = async (): Promise<ListResponse> => {
   }
 
   return response;
+};
+
+export const generateOllamaCloudAltText = async ({
+  userPrompt,
+  model,
+  image,
+  apiKey,
+}: {
+  userPrompt: string;
+  model: string;
+  image: File;
+  apiKey: string;
+}) => {
+  const prompt = userPrompt || DEFAULT_PROMPT;
+
+  const client = getOllamaClient(OLLAMA_CLOUD_API_BASE, apiKey);
+
+  // 1. Convert image using the helper
+  const base64Image = await fileToBase64(image);
+
+  // 2. Interact with the Ollama API
+  try {
+    const response = await client.chat({
+      model: model,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+          images: [base64Image],
+        },
+      ],
+      stream: false,
+      options: {
+        temperature: 0.1,
+      },
+    });
+
+    if (!response) {
+      throw new Error("Failed to generate response from Ollama API");
+    }
+
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to generate response from Ollama API");
+  }
 };

@@ -1,10 +1,12 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { atomWithMutation } from "jotai-tanstack-query";
 import { useRef } from "react";
 
 import { generateOllamaLocalAltText } from "@/services/api/ollama-local";
 import { db } from "@/services/db/index-db";
+import { apiKeyInputAtom } from "@/stores/app";
 import { useImageStorage } from "./useImageStorage";
+import { generateOllamaCloudAltText } from "@/services/api/ollama-cloud";
 
 const generateAltTextAtom = atomWithMutation(() => ({
   mutationFn: async ({
@@ -13,12 +15,14 @@ const generateAltTextAtom = atomWithMutation(() => ({
     model,
     selectedOllamaType,
     signal,
+    apiKey,
   }: {
     imageId: number;
     userPrompt: string;
     model: string;
     selectedOllamaType: string;
     signal: AbortSignal;
+    apiKey: string;
   }) => {
     if (!model) throw new Error("No model selected");
 
@@ -26,12 +30,21 @@ const generateAltTextAtom = atomWithMutation(() => ({
 
     if (!image || !image.file) throw new Error("Image not found");
 
-    const response = await generateOllamaLocalAltText({
-      image: image.file,
-      userPrompt,
-      model,
-      signal,
-    });
+    const isOllamaLocal = selectedOllamaType === "ollama-local";
+
+    const response = isOllamaLocal
+      ? await generateOllamaLocalAltText({
+          image: image.file,
+          userPrompt,
+          model,
+          signal,
+        })
+      : await generateOllamaCloudAltText({
+          userPrompt,
+          model,
+          image: image.file,
+          apiKey,
+        });
 
     const altText = response.message.content;
 
@@ -42,6 +55,7 @@ const generateAltTextAtom = atomWithMutation(() => ({
 }));
 
 export const useGenerateAltTextImage = () => {
+  const apiKey = useAtomValue(apiKeyInputAtom);
   const [{ mutate, status, data, error, isPending, variables, reset }] =
     useAtom(generateAltTextAtom);
   const { refreshImages } = useImageStorage();
@@ -63,6 +77,7 @@ export const useGenerateAltTextImage = () => {
         model,
         selectedOllamaType,
         signal: controllerRef.current?.signal,
+        apiKey,
       },
       {
         onSuccess: async () => refreshImages(),
