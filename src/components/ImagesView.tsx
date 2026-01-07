@@ -97,52 +97,48 @@ const ImagesView = () => {
   }
 
   const onGenerateAltText = (id: number) => {
-    if (!selectedLocalModel) {
+    if (id && selectedLocalModel && selectedOllamaType === "ollama-local") {
+      generateAltText(id, prompt, selectedLocalModel, selectedOllamaType);
+    } else if (
+      id &&
+      selectedCloudModel &&
+      selectedOllamaType === "ollama-cloud"
+    ) {
+      generateAltText(id, prompt, selectedCloudModel, selectedOllamaType);
+    } else {
       showErrorNoModelSelected();
-
-      return;
-    }
-
-    if (!selectedCloudModel) {
-      showErrorNoModelSelected();
-
-      return;
-    }
-
-    if (id && (selectedLocalModel || selectedCloudModel)) {
-      const model =
-        selectedOllamaType === "ollama-local"
-          ? selectedLocalModel
-          : selectedCloudModel;
-
-      generateAltText(id, prompt, model, selectedOllamaType);
     }
   };
 
   const onGenerateAltTexts = () => {
-    if (!selectedLocalModel) {
-      showErrorNoModelSelected();
-
-      return;
-    }
-
-    if (!selectedCloudModel) {
-      showErrorNoModelSelected();
-
-      return;
-    }
-
     const imageIds = images
       .map((img) => img.id)
       .filter((id): id is number => id !== undefined);
 
-    if (imageIds.length && (selectedLocalModel || selectedCloudModel)) {
-      const model =
-        selectedOllamaType === "ollama-local"
-          ? selectedLocalModel
-          : selectedCloudModel;
-
-      generateAltTexts(imageIds, prompt, model, selectedOllamaType);
+    if (
+      imageIds.length &&
+      selectedLocalModel &&
+      selectedOllamaType === "ollama-local"
+    ) {
+      generateAltTexts(
+        imageIds,
+        prompt,
+        selectedLocalModel,
+        selectedOllamaType,
+      );
+    } else if (
+      imageIds.length &&
+      selectedCloudModel &&
+      selectedOllamaType === "ollama-cloud"
+    ) {
+      generateAltTexts(
+        imageIds,
+        prompt,
+        selectedCloudModel,
+        selectedOllamaType,
+      );
+    } else {
+      showErrorNoModelSelected();
     }
   };
 
