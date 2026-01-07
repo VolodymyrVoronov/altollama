@@ -52,7 +52,7 @@ const Models = ({
                 <InfoIcon className="inline size-3" />
               </TooltipTrigger>
               <TooltipContent>
-                <span className="flex w-50 text-balance">
+                <span className="flex w-50 text-pretty">
                   NOTE: Please use only models, which support the image
                   processing, otherwise the prompt will not work and the alt
                   text will not be generated

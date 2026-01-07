@@ -5,6 +5,7 @@ import {
   EraserIcon,
   EyeIcon,
   EyeOffIcon,
+  InfoIcon,
   KeyRoundIcon,
 } from "lucide-react";
 import { useId, useState, type ChangeEvent } from "react";
@@ -35,6 +36,7 @@ const SettingsAPIKey = () => {
   const {
     value,
     storageType,
+
     saveToLocalStorage,
     saveToSessionStorage,
     clearStorage,
@@ -71,12 +73,28 @@ const SettingsAPIKey = () => {
   };
 
   const isValueEmpty = value === null;
-  const isLocalValueEmpty = inputKey === "" || inputKey === null;
+  const isLocalValueEmpty =
+    inputKey === "" || inputKey === null || inputKey.trim() === "";
 
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="flex w-full flex-col items-start gap-2">
-        <Label htmlFor={id}>Please enter your API key</Label>
+        <Label htmlFor={id} className="inline-flex items-center gap-1">
+          <span>Please enter your API key</span>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <InfoIcon className="inline size-3 text-rose-500" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <span className="flex w-50 text-pretty">
+                NOTE: Without API key, Ollama Cloud will not work. You won't be
+                able to generate alt text for the images. You can find your API
+                key in your Ollama Cloud account.
+              </span>
+            </TooltipContent>
+          </Tooltip>
+        </Label>
 
         <div className="relative w-full">
           <Input
