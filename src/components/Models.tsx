@@ -72,7 +72,7 @@ const Models = ({
             value={model || ""}
             onValueChange={onModelChange}
             disabled={disabled}
-            className="grid h-full grid-cols-1 content-start items-start gap-2 overflow-y-auto"
+            className="grid h-full grid-cols-1 content-start items-start gap-2 overflow-y-auto 2xl:grid-cols-2"
           >
             {models?.map((model) => (
               <FieldLabel key={model.name} htmlFor={model.name}>
