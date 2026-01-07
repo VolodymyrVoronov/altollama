@@ -1,5 +1,7 @@
 import { format } from "date-fns";
 import { BanIcon, InfoIcon, SparkleIcon, Trash2Icon } from "lucide-react";
+import { useState } from "react";
+import Lightbox from "yet-another-react-lightbox";
 
 import { cn } from "@/lib/utils";
 import type { ImageDisplay } from "@/types";
@@ -20,6 +22,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "./ui/button";
 import { Spinner } from "./ui/spinner";
+
+import "yet-another-react-lightbox/styles.css";
 
 export interface ImageViewProps {
   image: ImageDisplay;
@@ -44,6 +48,8 @@ const ImageView = ({
   onDelete,
   onCancelGeneration,
 }: ImageViewProps) => {
+  const [lightBoxOpen, setLightBoxOpen] = useState(false);
+
   const onGenerateAltTextButtonClick = () => {
     if (image.id) {
       onGenerateAltText(image.id);
@@ -54,6 +60,14 @@ const ImageView = ({
     if (image.id) {
       onDelete(image.id);
     }
+  };
+
+  const onLightBoxOpenButtonClick = () => {
+    setLightBoxOpen(true);
+  };
+
+  const onLightBoxCloseButtonClick = () => {
+    setLightBoxOpen(false);
   };
 
   return (
@@ -73,12 +87,42 @@ const ImageView = ({
           </TooltipContent>
         </Tooltip>
 
-        <img
-          src={image.previewUrl || ""}
-          alt={image.name || ""}
-          className={cn("aspect-video h-56 rounded-t-xl object-cover sm:h-50", {
-            "animate-pulse": generating,
+        <Button
+          onClick={onLightBoxOpenButtonClick}
+          asChild
+          className={cn("m-0 rounded-none p-0 hover:cursor-zoom-in", {
+            "pointer-events-none": generating,
           })}
+        >
+          <img
+            src={image.previewUrl || ""}
+            alt={image.name || ""}
+            className={cn(
+              "aspect-video h-56 rounded-t-xl object-cover sm:h-50",
+              {
+                "animate-pulse": generating,
+              },
+            )}
+          />
+        </Button>
+
+        <Lightbox
+          open={lightBoxOpen}
+          close={onLightBoxCloseButtonClick}
+          slides={[
+            {
+              src: image.previewUrl || "",
+              alt: image.name || "",
+            },
+          ]}
+          styles={{
+            navigationPrev: {
+              display: "none",
+            },
+            navigationNext: {
+              display: "none",
+            },
+          }}
         />
       </CardContent>
 
