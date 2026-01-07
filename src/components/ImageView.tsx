@@ -57,7 +57,7 @@ const ImageView = ({
   };
 
   return (
-    <Card className="relative w-full gap-2 pt-0 pb-3">
+    <Card className="relative h-full w-full gap-2 pt-0 pb-3">
       <CardContent className="px-0">
         <Tooltip>
           <TooltipTrigger

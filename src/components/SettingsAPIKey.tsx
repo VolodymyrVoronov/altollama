@@ -1,3 +1,4 @@
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   BrushCleaningIcon,
   ClockFadingIcon,
@@ -8,10 +9,11 @@ import {
   InfoIcon,
   KeyRoundIcon,
 } from "lucide-react";
-import { useId, useState, type ChangeEvent } from "react";
+import { useId, useLayoutEffect, useState, type ChangeEvent } from "react";
 
 import { OLLAMA_CLOUD_API_KEY_STORAGE_KEY } from "@/constants";
 import { useBrowserStorage } from "@/hooks/useBrowserStorage";
+import { apiKeyInputAtom } from "@/stores/app";
 
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -31,8 +33,11 @@ import {
 const SettingsAPIKey = () => {
   const id = useId();
 
+  const apiKey = useAtomValue(apiKeyInputAtom);
+  const setApiKey = useSetAtom(apiKeyInputAtom);
+
   const [isVisible, setIsVisible] = useState(false);
-  const [inputKey, setInputKey] = useState("");
+
   const {
     value,
     storageType,
@@ -45,7 +50,7 @@ const SettingsAPIKey = () => {
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    setInputKey(value);
+    setApiKey(value);
   };
 
   const onVisibleButtonClick = () => {
@@ -53,14 +58,14 @@ const SettingsAPIKey = () => {
   };
 
   const onSaveToSessionStorageButtonClick = () => {
-    if (inputKey) {
-      saveToSessionStorage(inputKey);
+    if (apiKey) {
+      saveToSessionStorage(apiKey);
     }
   };
 
   const onSaveToLocalStorageButtonClick = () => {
-    if (inputKey) {
-      saveToLocalStorage(inputKey);
+    if (apiKey) {
+      saveToLocalStorage(apiKey);
     }
   };
 
@@ -69,12 +74,21 @@ const SettingsAPIKey = () => {
   };
 
   const onClearInputButtonClick = () => {
-    setInputKey("");
+    setApiKey("");
   };
+
+  useLayoutEffect(() => {
+    if (value) {
+      setApiKey(value);
+    }
+  }, [setApiKey, value]);
 
   const isValueEmpty = value === null;
   const isLocalValueEmpty =
-    inputKey === "" || inputKey === null || inputKey.trim() === "";
+    apiKey === "" ||
+    apiKey === null ||
+    apiKey === undefined ||
+    apiKey?.trim() === "";
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -90,7 +104,7 @@ const SettingsAPIKey = () => {
               <span className="flex w-50 text-pretty">
                 NOTE: Without API key, Ollama Cloud will not work. You won't be
                 able to generate alt text for the images. You can find your API
-                key in your Ollama Cloud account.
+                key in your Ollama Cloud account
               </span>
             </TooltipContent>
           </Tooltip>
@@ -99,7 +113,7 @@ const SettingsAPIKey = () => {
         <div className="relative w-full">
           <Input
             id={id}
-            value={inputKey}
+            value={apiKey}
             onChange={onInputChange}
             type={isVisible ? "text" : "password"}
             placeholder="Paste your API Key here"
@@ -136,7 +150,7 @@ const SettingsAPIKey = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent className="max-w-50">
-                <p>Clear input</p>
+                <p>Clear API key input</p>
               </TooltipContent>
             </Tooltip>
           )}
@@ -188,24 +202,26 @@ const SettingsAPIKey = () => {
               </TooltipContent>
             </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={onClearStorageButtonClick}
-                  disabled={isValueEmpty}
-                  variant={isValueEmpty ? "outline" : "destructive"}
-                  size="icon-sm"
-                >
-                  <EraserIcon />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-50">
-                <p>
-                  Clear the API key from storage. The key will be removed from
-                  currently used storage
-                </p>
-              </TooltipContent>
-            </Tooltip>
+            {!isValueEmpty ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={onClearStorageButtonClick}
+                    disabled={isValueEmpty}
+                    variant={isValueEmpty ? "outline" : "destructive"}
+                    size="icon-sm"
+                  >
+                    <EraserIcon />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-50">
+                  <p>
+                    Clear the API key from storage. The key will be removed from
+                    currently used storage
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            ) : null}
           </ButtonGroup>
 
           {!isValueEmpty && (

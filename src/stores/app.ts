@@ -11,3 +11,5 @@ export const selectedOllamaCloudModelAtom = atom<string | undefined>(undefined);
 export const userPromptAtom = atom<string>(DEFAULT_PROMPT);
 
 export const imagesAtom = atom<ImageDisplay[]>([]);
+
+export const apiKeyInputAtom = atom<string>("");
