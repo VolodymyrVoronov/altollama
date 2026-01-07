@@ -1,3 +1,5 @@
+import { Ollama } from "ollama";
+
 /**
  * Converts a File object to a Base64 string stripped of the data URL prefix.
  * Required for Ollama API image processing.
@@ -38,4 +40,18 @@ export const renderBytes = (bytes: number): string => {
   }
 
   return `${size.toFixed(2)}${units[unitIndex]}`;
+};
+
+/**
+ * Creates a new Ollama client with the provided host and API key.
+ */
+export const getOllamaClient = (host: string, apiKey?: string) => {
+  if (!apiKey) return new Ollama({ host });
+
+  return new Ollama({
+    host: host,
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
 };

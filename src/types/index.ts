@@ -54,3 +54,5 @@ export interface ImageItem {
 export interface ImageDisplay extends ImageItem {
   previewUrl: string;
 }
+
+export type StorageType = "local" | "session";

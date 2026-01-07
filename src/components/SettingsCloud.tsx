@@ -1,5 +1,6 @@
 import { usePingOllamaCloud } from "@/hooks/usePingOllamaCloud";
 
+import SettingsCloudModels from "./SettingsCloudModels";
 import SettingsLoadingMessage from "./SettingsLoadingMessage";
 import SettingsOfflineMessage from "./SettingsOfflineMessage";
 import SettingsOnlineMessage from "./SettingsOnlineMessage";
@@ -29,7 +30,7 @@ const SettingsCloud = () => {
     <div className="flex h-[calc(100svh-86px)] flex-col gap-2 overflow-y-auto">
       <SettingsOnlineMessage>Ollama Cloud is running</SettingsOnlineMessage>
 
-      {/* <SettingsLocalModels /> */}
+      <SettingsCloudModels />
     </div>
   );
 };

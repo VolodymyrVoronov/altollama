@@ -18,13 +18,16 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  server: {
-    proxy: {
-      "/api-proxy": {
-        target: "https://ollama.com",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api-proxy/, ""),
-      },
-    },
-  },
+  server:
+    process.env.NODE_ENV === "development"
+      ? {
+          proxy: {
+            "/api-proxy": {
+              target: "https://ollama.com",
+              changeOrigin: true,
+              rewrite: (path) => path.replace(/^\/api-proxy/, ""),
+            },
+          },
+        }
+      : undefined,
 });

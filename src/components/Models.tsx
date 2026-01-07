@@ -1,6 +1,7 @@
 import { HardDriveIcon, InfoIcon } from "lucide-react";
 
 import { renderBytes } from "@/helpers";
+import { cn } from "@/lib/utils";
 import type { IOllamaModel } from "@/types";
 
 import { Pill } from "@/components/kibo-ui/pill";
@@ -19,16 +20,25 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { ModelResponse } from "ollama";
 
 export interface IModelsProps {
-  models?: IOllamaModel[];
+  models?: IOllamaModel[] | ModelResponse[];
   model?: string;
   disabled?: boolean;
+  modelsContainerClassName?: string;
 
   onModelChange?: (model: string | undefined) => void;
 }
 
-const Models = ({ models, model, disabled, onModelChange }: IModelsProps) => {
+const Models = ({
+  models,
+  model,
+  disabled,
+  modelsContainerClassName,
+
+  onModelChange,
+}: IModelsProps) => {
   return (
     <FieldGroup>
       <FieldSet className="flex flex-col gap-2">
@@ -52,7 +62,12 @@ const Models = ({ models, model, disabled, onModelChange }: IModelsProps) => {
           </FieldDescription>
         </div>
 
-        <div className="h-[calc(100svh-400px)] w-full overflow-hidden">
+        <div
+          className={cn(
+            "h-[calc(100svh-400px)] w-full overflow-hidden",
+            modelsContainerClassName,
+          )}
+        >
           <RadioGroup
             value={model || ""}
             onValueChange={onModelChange}

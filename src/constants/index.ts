@@ -11,3 +11,6 @@ export const DEFAULT_PROMPT = `Act as an Accessibility Specialist. Your task is 
 `;
 
 export const IS_DEV_MODE = process.env.NODE_ENV === "development";
+
+export const OLLAMA_CLOUD_API_KEY_STORAGE_KEY =
+  "alt-text-generator-2-ollama-cloud-api-key";

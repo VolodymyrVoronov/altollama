@@ -8,6 +8,7 @@ import { useGenerateAltTextImage } from "@/hooks/useGenerateAltTextImage";
 import { useGenerateAltTextImages } from "@/hooks/useGenerateAltTextImages";
 import { useImageStorage } from "@/hooks/useImageStorage";
 import {
+  selectedOllamaCloudModelAtom,
   selectedOllamaLocalModelAtom,
   selectedOllamaTypeAtom,
   userPromptAtom,
@@ -66,6 +67,7 @@ const ImagesView = () => {
     delay: 500,
   });
   const selectedLocalModel = useAtomValue(selectedOllamaLocalModelAtom);
+  const selectedCloudModel = useAtomValue(selectedOllamaCloudModelAtom);
   const selectedOllamaType = useAtomValue(selectedOllamaTypeAtom);
 
   const [showPopover, setShowPopover] = useState(false);
@@ -101,9 +103,17 @@ const ImagesView = () => {
       return;
     }
 
-    if (id && selectedLocalModel) {
+    if (!selectedCloudModel) {
+      showErrorNoModelSelected();
+
+      return;
+    }
+
+    if (id && (selectedLocalModel || selectedCloudModel)) {
       const model =
-        selectedOllamaType === "ollama-local" ? selectedLocalModel : "";
+        selectedOllamaType === "ollama-local"
+          ? selectedLocalModel
+          : selectedCloudModel;
 
       generateAltText(id, prompt, model, selectedOllamaType);
     }
@@ -116,13 +126,21 @@ const ImagesView = () => {
       return;
     }
 
+    if (!selectedCloudModel) {
+      showErrorNoModelSelected();
+
+      return;
+    }
+
     const imageIds = images
       .map((img) => img.id)
       .filter((id): id is number => id !== undefined);
 
-    if (imageIds.length && selectedLocalModel) {
+    if (imageIds.length && (selectedLocalModel || selectedCloudModel)) {
       const model =
-        selectedOllamaType === "ollama-local" ? selectedLocalModel : "";
+        selectedOllamaType === "ollama-local"
+          ? selectedLocalModel
+          : selectedCloudModel;
 
       generateAltTexts(imageIds, prompt, model, selectedOllamaType);
     }
