@@ -20,6 +20,6 @@ The app for generating alt-text for image/s using LLMs with image processing sup
 
 Always review AI-generated alt-text for accuracy before using it in production environments to ensure accessibility standards are met.
 
-**Please note:** App will only works in DEV mode (e.g. npm run dev).
+**Please note:** App will only works in DEV mode **locally** (e.g. npm run dev).
 
 Disclaimer: Please note that this project is for demonstrational and educational purposes only.
