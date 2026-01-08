@@ -7,7 +7,7 @@ const Header = () => {
         <img src="/logo.png" alt="AltLlama logo" className="size-8" />
 
         <span className="text-muted-foreground font-mono text-xl font-semibold">
-          AltLlama
+          Alt'Ollama
         </span>
       </div>
 

@@ -3,9 +3,9 @@ import { Spinner } from "./ui/spinner";
 
 const LoadingScreen = () => {
   return (
-    <div className="flex h-[calc(100svh-48px)] w-full flex-col items-center justify-center overflow-hidden rounded-md bg-black">
+    <div className="flex h-[calc(100svh-8px)] w-full flex-col items-center justify-center overflow-hidden rounded-md bg-black">
       <h1 className="relative z-20 inline-flex items-center text-center text-3xl font-bold text-white md:text-7xl lg:text-9xl">
-        <span>AltLlama</span> <Spinner className="self-start" />
+        <span>Alt'Ollama</span> <Spinner className="self-start" />
       </h1>
       <div className="relative h-40 w-160">
         {/* Gradients */}
