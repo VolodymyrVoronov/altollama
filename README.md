@@ -18,6 +18,6 @@ The app for generating alt-text for image/s using LLMs with image processing sup
 1. Install packages and run app
 2. Use tab "Ollama Cloud"
 
-Please note: App will only works in DEV mode (e.g. npm run dev).
+**Please note:** App will only works in DEV mode (e.g. npm run dev).
 
 Disclaimer: Please note that this project is for demonstrational and educational purposes only.
