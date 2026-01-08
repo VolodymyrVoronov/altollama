@@ -2,7 +2,15 @@ import ModeToggle from "./ModeToggle";
 
 const Header = () => {
   return (
-    <header className="flex flex-row justify-end-safe">
+    <header className="flex flex-row items-center justify-between gap-2">
+      <div className="flex items-center gap-2">
+        <img src="/logo.png" alt="AltLlama logo" className="size-8" />
+
+        <span className="text-muted-foreground font-mono text-xl font-semibold">
+          AltLlama
+        </span>
+      </div>
+
       <ModeToggle />
     </header>
   );
