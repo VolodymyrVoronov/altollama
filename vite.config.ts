@@ -13,7 +13,6 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
-  base: process.env.NODE_ENV === "production" ? "/test/" : "/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
