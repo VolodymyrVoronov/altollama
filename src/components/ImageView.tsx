@@ -116,6 +116,9 @@ const ImageView = ({
         <Lightbox
           open={lightBoxOpen}
           close={onLightBoxCloseButtonClick}
+          controller={{
+            closeOnBackdropClick: true,
+          }}
           slides={[
             {
               src: image.previewUrl || "",
