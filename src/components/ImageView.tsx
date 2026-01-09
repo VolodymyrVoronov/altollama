@@ -1,7 +1,8 @@
 import { format } from "date-fns";
 import { BanIcon, InfoIcon, SparkleIcon, Trash2Icon } from "lucide-react";
-import { useState } from "react";
-import Lightbox from "yet-another-react-lightbox";
+import { useRef, useState } from "react";
+import Lightbox, { type CaptionsRef } from "yet-another-react-lightbox";
+import Captions from "yet-another-react-lightbox/plugins/captions";
 
 import { cn } from "@/lib/utils";
 import type { ImageDisplay } from "@/types";
@@ -24,6 +25,7 @@ import ButtonCopy from "./smoothui/button-copy";
 import { Button } from "./ui/button";
 import { Spinner } from "./ui/spinner";
 
+import "yet-another-react-lightbox/plugins/captions.css";
 import "yet-another-react-lightbox/styles.css";
 
 export interface ImageViewProps {
@@ -49,6 +51,8 @@ const ImageView = ({
   onDelete,
   onCancelGeneration,
 }: ImageViewProps) => {
+  const captionsRef = useRef<CaptionsRef | null>(null);
+
   const [lightBoxOpen, setLightBoxOpen] = useState(false);
 
   const onGenerateAltTextButtonClick = () => {
@@ -114,6 +118,12 @@ const ImageView = ({
         </Button>
 
         <Lightbox
+          plugins={[Captions]}
+          captions={{
+            ref: captionsRef,
+            descriptionMaxLines: Infinity,
+            descriptionTextAlign: "center",
+          }}
           open={lightBoxOpen}
           close={onLightBoxCloseButtonClick}
           controller={{
@@ -123,6 +133,7 @@ const ImageView = ({
             {
               src: image.previewUrl || "",
               alt: image.name || "",
+              description: image.image_alt_text || "",
             },
           ]}
           styles={{
@@ -131,6 +142,13 @@ const ImageView = ({
             },
             navigationNext: {
               display: "none",
+            },
+          }}
+          on={{
+            click: () => {
+              (captionsRef.current?.visible
+                ? captionsRef.current?.hide
+                : captionsRef.current?.show)?.();
             },
           }}
         />
