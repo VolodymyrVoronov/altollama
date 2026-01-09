@@ -20,6 +20,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import ButtonCopy from "./smoothui/button-copy";
 import { Button } from "./ui/button";
 import { Spinner } from "./ui/spinner";
 
@@ -68,6 +69,12 @@ const ImageView = ({
 
   const onLightBoxCloseButtonClick = () => {
     setLightBoxOpen(false);
+  };
+
+  const onCopyButtonClick = async () => {
+    if (image.id && image.image_alt_text) {
+      await navigator.clipboard.writeText(image.image_alt_text);
+    }
   };
 
   return (
@@ -136,6 +143,17 @@ const ImageView = ({
       </CardHeader>
 
       <CardFooter className="justify-end-safe gap-2 px-3">
+        {image.image_alt_text ? (
+          <div className="mr-auto">
+            <ButtonCopy
+              duration={2000}
+              loadingDuration={1000}
+              onCopy={onCopyButtonClick}
+              disabled={disabled}
+            />
+          </div>
+        ) : null}
+
         <ButtonGroup>
           <Tooltip>
             <TooltipTrigger asChild>
