@@ -27,8 +27,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Progress } from "@/components/ui/progress";
 import ImageView from "./ImageView";
+import AnimatedProgressBar from "./smoothui/animated-progress-bar";
 import { Button } from "./ui/button";
 import { ButtonGroup } from "./ui/button-group";
 import { Spinner } from "./ui/spinner";
@@ -232,7 +232,7 @@ const ImagesView = () => {
             {progressPercentage} %
           </Pill>
 
-          <Progress value={progressPercentage} />
+          <AnimatedProgressBar value={progressPercentage} />
 
           <Pill variant="default" className="px-2 py-0.5">
             {processedCount}/{totalCount} processed
